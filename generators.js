@@ -62,7 +62,12 @@ console.log("--")
 
 const testingTeam = {
   lead: 'Amanda',
-  tester: 'Bill'
+  tester: 'Bill',
+  [Symbol.iterator]: function* (){
+    yield this.lead;
+    yield this.tester;
+    yield 5;
+  }
 };
 
 const engineeringTeam = {
@@ -71,26 +76,16 @@ const engineeringTeam = {
   lead: 'Jill',
   manager: 'Alex',
   engineering: 'Dave',
-  testingTeam
+  [Symbol.iterator]: function* (){
+    yield this.lead;
+    yield this.manager;
+    yield this.engineering;
+  }
 };
-
-
-function* TeamIterator(team){
-  yield team.size;
-  yield team.manager;
-  yield team.engineering;
-  const TestingTeamGenerator = TestingTeamIterator(team.testingTeam);
-  yield* TestingTeamGenerator
-}
-
-function* TestingTeamIterator(team) {
-  yield team.lead;
-  yield team.tester;
-}
 
 const names = [];
 
-for (const name of TeamIterator(engineeringTeam)) {
+for (const name of [...testingTeam, ...engineeringTeam]) {
   names.push(name) //iterate in only particolar property
 }
 
